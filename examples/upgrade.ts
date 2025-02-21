@@ -21,9 +21,6 @@ const main = async () => {
     contractAddress: STORAGE_DELEGATION_1,
   });
 
-  console.log(">>> Authorization (1):");
-  console.log(authorization1);
-
   const abi = parseAbi(["function set(uint256)", "function counter() view returns (uint256)", "function noop()"]);
 
   await clients.wallet.writeContract({
@@ -47,9 +44,6 @@ const main = async () => {
     contractAddress: STORAGE_DELEGATION_2,
   });
 
-  console.log(">>> Authorization (2):");
-  console.log(authorization2);
-
   // TODO: See how delegate without using `writeContract`
   // await clients.wallet.sendTransaction({
   //   authorizationList: [authorization2],
@@ -59,7 +53,7 @@ const main = async () => {
     abi,
     address: account.address,
     functionName: "noop",
-    authorizationList: [authorization1],
+    authorizationList: [authorization2],
   });
 
   const counterAfter = await clients.public.readContract({

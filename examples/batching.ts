@@ -20,16 +20,9 @@ const main = async () => {
     contractAddress: BATCH_CALL_DELEGATION,
   });
 
-  const codeBefore = await clients.public.getCode({ address: ALICE });
-  console.log(">>> Code before: ");
-  console.log(codeBefore || "0x");
-
   const balanceBefore = await clients.public.getBalance({ address: BOB });
   console.log(">>> Bob's balance before: ");
   console.log(balanceBefore);
-
-  console.log(">>> Authorization:");
-  console.log(authorization);
 
   const hash = await clients.wallet.writeContract({
     abi: parseAbi(["function execute((bytes data,address to,uint256 value)[])"]),
@@ -54,10 +47,6 @@ const main = async () => {
 
   console.log(">>> Transaction hash:");
   console.log(hash);
-
-  const codeAfter = await clients.public.getCode({ address: account.address });
-  console.log(">>> Code after: ");
-  console.log(codeAfter);
 
   const balanceAfter = await clients.public.getBalance({ address: BOB });
   console.log(">>> Bob's balance after: ");

@@ -14,4 +14,6 @@ contract BatchCallDelegation {
             require(success, "call reverted");
         }
     }
+
+    function noop() external { }
 }
