@@ -32,7 +32,8 @@ const main = async () => {
 
   const abi = parseAbi(["function execute((bytes data,address to,uint256 value)[])", "function noop()"]);
 
-  const hash = await alice.writeContract({
+  // Delegate and call batch atomically
+  await alice.writeContract({
     abi,
     address: alice.account.address,
     functionName: "execute",
@@ -48,9 +49,7 @@ const main = async () => {
     authorizationList: [authorization1],
   });
 
-  console.log(">>> Transaction hash:");
-  console.log(hash);
-
+  // The EOA has delegation
   const codeAfter = await publicClient.getCode({ address: alice.account.address });
   console.log(">>> Code after: ");
   console.log(codeAfter);
@@ -67,11 +66,6 @@ const main = async () => {
     console.log(">>> Sending ETH to alice reverts because contract doesn't implement the receive() function");
   }
 
-  // TODO: See how delegate without using `writeContract`
-  // await clients.wallet.sendTransaction({
-  //   authorizationList: [authorization2],
-  // });
-
   const authorization2 = await alice.signAuthorization({
     contractAddress: RECEIVE_ETH_DELEGATION,
   });
@@ -79,13 +73,12 @@ const main = async () => {
   console.log(">>> Authorization (2):");
   console.log(authorization2);
 
+  // Delegate to a contract which implements `receive()`
   await alice.sendTransaction({
-    abi,
-    address: alice.account.address,
-    functionName: "noop",
     authorizationList: [authorization2],
   });
 
+  // Transfer works now
   await bob.sendTransaction({
     to: alice.account.address,
     value: parseEther("1"),

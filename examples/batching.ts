@@ -3,7 +3,6 @@ import { anvil } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { eip7702Actions } from "viem/experimental";
 
-const ALICE = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const ALICE_PK = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const BOB = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 const BATCH_CALL_DELEGATION = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -16,6 +15,7 @@ const main = async () => {
     public: createPublicClient({ chain: anvil, transport: http() }),
   };
 
+  // Sign delegation
   const authorization = await clients.wallet.signAuthorization({
     contractAddress: BATCH_CALL_DELEGATION,
   });
@@ -24,7 +24,8 @@ const main = async () => {
   console.log(">>> Bob's balance before: ");
   console.log(balanceBefore);
 
-  const hash = await clients.wallet.writeContract({
+  // Delegate and call batch atomically
+  await clients.wallet.writeContract({
     abi: parseAbi(["function execute((bytes data,address to,uint256 value)[])"]),
     address: account.address,
     functionName: "execute",
@@ -44,9 +45,6 @@ const main = async () => {
     ],
     authorizationList: [authorization],
   });
-
-  console.log(">>> Transaction hash:");
-  console.log(hash);
 
   const balanceAfter = await clients.public.getBalance({ address: BOB });
   console.log(">>> Bob's balance after: ");

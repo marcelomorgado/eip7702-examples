@@ -1,9 +1,8 @@
 import { createWalletClient, http, parseEther, parseAbi, createPublicClient } from "viem";
-import { anvil } from "viem/chains";
+import { anvil, bob } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { eip7702Actions } from "viem/experimental";
 
-const ALICE = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const ALICE_PK = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const BOB = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 const STORAGE_DELEGATION_1 = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
@@ -44,15 +43,8 @@ const main = async () => {
     contractAddress: STORAGE_DELEGATION_2,
   });
 
-  // TODO: See how delegate without using `writeContract`
-  // await clients.wallet.sendTransaction({
-  //   authorizationList: [authorization2],
-  // });
-
-  await clients.wallet.writeContract({
-    abi,
-    address: account.address,
-    functionName: "noop",
+  await clients.wallet.sendTransaction({
+    to: BOB,
     authorizationList: [authorization2],
   });
 

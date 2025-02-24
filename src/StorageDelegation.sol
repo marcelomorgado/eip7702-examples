@@ -10,6 +10,4 @@ contract StorageDelegation {
     function set(uint256 c) external {
         counter = c;
     }
-
-    function noop() external { }
 }
