@@ -3,6 +3,9 @@
 This repository provides a small collection of examples demonstrating usage of
 [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702).
 
+> [!WARNING]
+> Do not use in production. These contracts are for demonstration purposes only.
+
 The examples cover some scenarios like storage handling, delegating to proxy contract, upgrading delegations, simple
 ownership and others.
 
